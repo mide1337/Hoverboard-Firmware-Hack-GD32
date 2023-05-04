@@ -349,7 +349,7 @@ int main (void)
 		
 		#ifdef TEST_SPEED
 			speed = 3 * (ABS((	((int32_t)steerCounter+100) % 400) - 200) - 100);
-		//speed = 300;
+			//speed = 300;
 		
 			gpio_bit_write(LED_GREEN_PORT, LED_GREEN, (steerCounter%200) < 100);		
 		#endif
