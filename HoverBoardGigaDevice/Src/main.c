@@ -330,18 +330,17 @@ int main (void)
   }
   buzzerFreq = 0;
 
-	// Wait until button is pressed
+	// Wait until button is released
 	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN))
 	{
-		// Reload watchdog while button is pressed
-		fwdgt_counter_reload();
+		fwdgt_counter_reload();	// Reload watchdog while button is pressed
 	}
 #endif
 
   while(1)
 	{
 #ifdef MASTER
-		steerCounter++;	
+		steerCounter++;		// something like DELAY_IN_MAIN_LOOP = 5 ms
 		if ((steerCounter % 2) == 0)
 		{	
 			// Request steering data
@@ -351,6 +350,8 @@ int main (void)
 		#ifdef TEST_SPEED
 			speed = 3 * (ABS((	((int32_t)steerCounter+100) % 400) - 200) - 100);
 		//speed = 300;
+		
+			gpio_bit_write(LED_GREEN_PORT, LED_GREEN, (steerCounter%200) < 100);		
 		#endif
 		
 		// Calculate expo rate for less steering with higher speeds

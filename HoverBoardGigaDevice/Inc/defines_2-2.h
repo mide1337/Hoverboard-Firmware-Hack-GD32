@@ -32,12 +32,12 @@
 
 
 // LED defines
-#define LED_GREEN TODO_PIN				// TODO
-#define LED_GREEN_PORT TODO_PORT	// TODO
+#define LED_GREEN GPIO_PIN_14			// lerwinDE
+#define LED_GREEN_PORT GPIOA			// lerwinDE
 #define LED_ORANGE TODO_PIN				// TODO
 #define LED_ORANGE_PORT TODO_PORT	// TODO
-#define LED_RED TODO_PIN					// TODO
-#define LED_RED_PORT TODO_PORT		// TODO
+#define LED_RED TODO_PIN					// lerwinDE: GPIO_PIN_13
+#define LED_RED_PORT TODO_PORT		// lerwinDE: GPIOA
 
 #define UPPER_LED_PIN TODO_PIN		// TODO
 #define UPPER_LED_PORT TODO_PORT	// TODO
