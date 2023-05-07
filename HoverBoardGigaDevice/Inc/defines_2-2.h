@@ -1,42 +1,17 @@
-/*
-* This file is part of the hoverboard-firmware-hack-V2 project. The 
-* firmware is used to hack the generation 2 board of the hoverboard.
-* These new hoverboards have no mainboard anymore. They consist of 
-* two Sensorboards which have their own BLDC-Bridge per Motor and an
-* ARM Cortex-M3 processor GD32F130C8.
-*
-* Copyright (C) 2018 Florian Staeblein
-* Copyright (C) 2018 Jakob Broemauer
-* Copyright (C) 2018 Kai Liebich
-* Copyright (C) 2018 Christoph Lehnert
-*
-* The program is based on the hoverboard project by Niklas Fauth. The 
-* structure was tried to be as similar as possible, so that everyone 
-* could find a better way through the code.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+#ifdef SLAVE	// this layout has buzzer on the slave board !
+	#define BUZZER
+#endif
+
 #define TODO_PORT GPIOB				// this should be a pin that does no harm if input or output
 #define TODO_PIN	GPIO_PIN_15	// B15 is not accessibla on the smaller QFN32 32 pin MCU version
 
 
 // LED defines
-#define LED_GREEN GPIO_PIN_14			// lerwinDE
-#define LED_GREEN_PORT GPIOA			// lerwinDE
+#define LED_GREEN TODO_PIN				// lerwinDE: GPIO_PIN_14 - in conflict with flash pins DIO and CLK !!!
+#define LED_GREEN_PORT TODO_PORT	// lerwinDE: GPIOA
 #define LED_ORANGE TODO_PIN				// TODO
 #define LED_ORANGE_PORT TODO_PORT	// TODO
-#define LED_RED TODO_PIN					// lerwinDE: GPIO_PIN_13
+#define LED_RED TODO_PIN					// lerwinDE: GPIO_PIN_13 - in conflict with flash pins DIO and CLK !!!
 #define LED_RED_PORT TODO_PORT		// lerwinDE: GPIOA
 
 #define UPPER_LED_PIN TODO_PIN		// TODO
@@ -109,8 +84,8 @@
 // main.c:306: gpio_bit_write(SELF_HOLD_PORT, SELF_HOLD_PIN, SET); 
 // and turns off power on Shutdown:
 // main.c:513:	 gpio_bit_write(SELF_HOLD_PORT, SELF_HOLD_PIN, RESET); 
-#define SELF_HOLD_PIN TODO_PIN		// TODO
-#define SELF_HOLD_PORT TODO_PORT				// TODO
+#define SELF_HOLD_PIN GPIO_PIN_11		// lerwinDE: master: A11 is used a hold bin, slave: A11 is buzzer pini
+#define SELF_HOLD_PORT GPIOA				// TODO
 
 // Button defines
 // on/off (POW) push-button. So also a connection (i guess with some smd resistor in between) to a MCU pin.
@@ -126,17 +101,20 @@
 #define USART_STEER_COM_RX_PIN GPIO_PIN_7		// robo, based on Herleybob:setup.c: usart_config(void)
 #define USART_STEER_COM_RX_PORT GPIOA				// robo, based on Herleybob:setup.c: usart_config(void)
 
-#ifdef MASTER
-// Buzzer defines
-#define BUZZER_PIN GPIO_PIN_11		// robo, based on Herleybob:defines.h
-#define BUZZER_PORT GPIOA				// robo, based on Herleybob:defines.h
+#ifdef BUZZER
+	// Buzzer defines
+	#define BUZZER_PIN GPIO_PIN_11		// robo, based on Herleybob:defines.h
+	#define BUZZER_PORT GPIOA				// robo, based on Herleybob:defines.h
+#endif
 
-// Charge state defines
-// This seems to be a digital input that hast to be high in order to enable the motors. 
-// main.c:381: chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
-// If not found it should be okay to simply comment this line because chargeStateLowActive in initialised as set = true
-#define CHARGE_STATE_PIN GPIO_PIN_0		// TODO
-#define CHARGE_STATE_PORT GPIOF				// TODO
+#ifdef MASTER
+
+	// Charge state defines
+	// This seems to be a digital input that hast to be high in order to enable the motors. 
+	// main.c:381: chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
+	// If not found it should be okay to simply comment this line because chargeStateLowActive in initialised as set = true
+	#define CHARGE_STATE_PIN GPIO_PIN_0		// TODO
+	#define CHARGE_STATE_PORT GPIOF				// TODO
 #endif
 
 // Debug pin defines - seems to be never used in code.

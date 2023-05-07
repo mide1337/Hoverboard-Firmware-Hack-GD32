@@ -167,7 +167,7 @@ void CalculateBLDC(void)
     batteryVoltage = batteryVoltage * 0.999 + ((float)adc_buffer.v_batt * ADC_BATTERY_VOLT) * 0.001;
   }
 	
-#ifdef MASTER
+#ifdef BUZZER
 	// Create square wave for buzzer
   buzzerTimer++;
   if (buzzerFreq != 0 && (buzzerTimer / 5000) % (buzzerPattern + 1) == 0)

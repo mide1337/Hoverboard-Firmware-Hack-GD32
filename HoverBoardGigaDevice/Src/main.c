@@ -321,15 +321,17 @@ int main (void)
 	// Init usart steer/bluetooth
 	USART_Steer_COM_init();
 
-#ifdef MASTER
+#ifdef BUZZER
 	// Startup-Sound
-	for (; index >= 0; index--)
+3	for (; index >= 0; index--)
 	{
     buzzerFreq = index;
     Delay(10);
   }
   buzzerFreq = 0;
+#endif
 
+#ifdef MASTER
 	// Wait until button is released
 	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN))
 	{
@@ -496,13 +498,16 @@ void ShutOff(void)
 {
 	int index = 0;
 
-	buzzerPattern = 0;
-	for (; index < 8; index++)
-	{
-		buzzerFreq = index;
-		Delay(10);
-	}
-	buzzerFreq = 0;
+	
+	#ifdef BUZZER
+		buzzerPattern = 0;
+		for (; index < 8; index++)
+		{
+			buzzerFreq = index;
+			Delay(10);
+		}
+		buzzerFreq = 0;
+	#endif
 
 	
 	#ifdef USART_MASTERSLAVE

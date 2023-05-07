@@ -216,10 +216,14 @@ void GPIO_init(void)
 	gpio_af_set(USART_STEER_COM_TX_PORT, USART_STEER_AF, USART_STEER_COM_TX_PIN);
 	gpio_af_set(USART_STEER_COM_RX_PORT, USART_STEER_AF, USART_STEER_COM_RX_PIN);
 	
-#ifdef MASTER	
+	
+#ifdef BUZZER
 	// Init buzzer
 	gpio_mode_set(BUZZER_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, BUZZER_PIN);	
 	gpio_output_options_set(BUZZER_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ, BUZZER_PIN);
+#endif
+
+#ifdef MASTER	
 	
 	// Init button
 	gpio_mode_set(BUTTON_PORT , GPIO_MODE_INPUT, GPIO_PUPD_NONE, BUTTON_PIN);	

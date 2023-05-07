@@ -1,32 +1,7 @@
-/*
-* This file is part of the hoverboard-firmware-hack-V2 project. The 
-* firmware is used to hack the generation 2 board of the hoverboard.
-* These new hoverboards have no mainboard anymore. They consist of 
-* two Sensorboards which have their own BLDC-Bridge per Motor and an
-* ARM Cortex-M3 processor GD32F130C8.
-*
-* Copyright (C) 2018 Florian Staeblein
-* Copyright (C) 2018 Jakob Broemauer
-* Copyright (C) 2018 Kai Liebich
-* Copyright (C) 2018 Christoph Lehnert
-*
-* The program is based on the hoverboard project by Niklas Fauth. The 
-* structure was tried to be as similar as possible, so that everyone 
-* could find a better way through the code.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+#ifdef MASTER		// layout 2.2 has buzzer on the slave board.
+	#define BUZZER
+#endif
+
 
 #define TODO_PORT 	GPIOF		// this should be a pin that does no harm if input or output
 #define TODO_PIN	GPIO_PIN_4	// PF4 is only accessible on the largest GD32F130Rx LQFP64 pinouts mcu
@@ -123,17 +98,19 @@
 #define USART_STEER_COM_RX_PIN GPIO_PIN_7		// TODO
 #define USART_STEER_COM_RX_PORT GPIOB				// TODO
 
-#ifdef MASTER
-// Buzzer defines
-#define BUZZER_PIN GPIO_PIN_8		// TODO
-#define BUZZER_PORT GPIOB				// TODO
+#ifdef BUZZER
+	// Buzzer defines
+	#define BUZZER_PIN GPIO_PIN_8		// TODO
+	#define BUZZER_PORT GPIOB				// TODO
+#endif
 
-// Charge state defines
-// This seems to be a digital input that hast to be high in order to enable the motors. 
-// main.c:381: chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
-// If not found it should be okay to simply comment this line because chargeStateLowActive in initialised as set = true
-#define CHARGE_STATE_PIN GPIO_PIN_0		
-#define CHARGE_STATE_PORT GPIOF				
+#ifdef MASTER
+	// Charge state defines
+	// This seems to be a digital input that hast to be high in order to enable the motors. 
+	// main.c:381: chargeStateLowActive = gpio_input_bit_get(CHARGE_STATE_PORT, CHARGE_STATE_PIN);
+	// If not found it should be okay to simply comment this line because chargeStateLowActive in initialised as set = true
+	#define CHARGE_STATE_PIN GPIO_PIN_0		
+	#define CHARGE_STATE_PORT GPIOF				
 #endif
 
 // Debug pin defines - seems to be never used in code.
