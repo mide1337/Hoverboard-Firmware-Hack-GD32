@@ -6,15 +6,15 @@
 
 
 #define _DEBUG      // debug output to first hardware serial port
-//#define DEBUG_RX    // additional hoverboard-rx debug output
+#define DEBUG_RX    // additional hoverboard-rx debug output
 
 #include "util.h"
 #include "hoverserial.h"
 
-#include <SoftwareSerial.h>
-SoftwareSerial oSerialHover(9,8); // RX, TX 
+//#include <SoftwareSerial.h>
+//SoftwareSerial oSerialHover(9,8); // RX, TX 
 //#define oSerialHover Serial     // Arduino, see PPMDevice.ino for help
-//#define oSerialHover Serial1    // ESP32
+#define oSerialHover Serial1    // ESP32
 
 SerialHover2Server oHoverFeedback;
 
@@ -25,7 +25,8 @@ void setup()
     Serial.println("Hello Hoverbaord V2.x :-)");
   #endif
   
-  HoverSetupArduino(oSerialHover,19200);    //  8 Mhz Arduino Mini too slow for 115200 !!!
+  //HoverSetupArduino(oSerialHover,19200);    //  8 Mhz Arduino Mini too slow for 115200 !!!
+  HoverSetupEsp32(oSerialHover,19200,16,17);      // baud, rx, tx
 
   pinMode(LED_BUILTIN, OUTPUT);
 }

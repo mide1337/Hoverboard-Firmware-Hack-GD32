@@ -76,24 +76,25 @@ void TIMER13_IRQHandler(void)
 {	
 	if (timeoutCounter_ms > TIMEOUT_MS)
 	{
+		
 		// First timeout reset all process values
-		if (timedOut == RESET)
+		if (timedOut == SET)	// robo: had been RESET = bug ?
 		{
 #ifdef MASTER
 			steer = 0;
 			speed = 0;
 			beepsBackwards = RESET;
-#endif
-#ifdef SLAVE
+#else
 			SetPWM(0);
 #endif
 		}
 		
-		timedOut = SET;
+		timedOut = RESET;		// robo: had been SET = bug ?
+		DEBUG_LedSet(RESET)		
 	}
 	else
 	{
-		timedOut = RESET;
+		timedOut = SET;		// robo: had been RESET = bug ?
 		timeoutCounter_ms++;
 	}
 

@@ -60,13 +60,16 @@ uint8_t pos;
 uint8_t lastPos;
 int16_t bldc_outputFilterPwm = 0;
 int32_t filter_reg;
-FlagStatus buzzerToggle = RESET;
-uint8_t buzzerFreq = 0;
-uint8_t buzzerPattern = 0;
-uint16_t buzzerTimer = 0;
+uint16_t buzzerTimer = 0;	// also used to calculate battery voltage :-/
 int16_t offsetcount = 0;
 int16_t offsetdc = 2000;
 uint32_t speedCounter = 0;
+
+#ifdef BUZZER
+FlagStatus buzzerToggle = RESET;
+uint8_t buzzerFreq = 0;
+uint8_t buzzerPattern = 0;
+#endif
 
 //----------------------------------------------------------------------------
 // Commutation table
@@ -167,9 +170,9 @@ void CalculateBLDC(void)
     batteryVoltage = batteryVoltage * 0.999 + ((float)adc_buffer.v_batt * ADC_BATTERY_VOLT) * 0.001;
   }
 	
+  buzzerTimer++;	// also used to calculate battery voltage :-/
 #ifdef BUZZER
 	// Create square wave for buzzer
-  buzzerTimer++;
   if (buzzerFreq != 0 && (buzzerTimer / 5000) % (buzzerPattern + 1) == 0)
 	{
     if (buzzerTimer % buzzerFreq == 0)
@@ -185,16 +188,22 @@ void CalculateBLDC(void)
 #endif
 	
 	// Calculate current DC
-	currentDC = ABS((adc_buffer.current_dc - offsetdc) * MOTOR_AMP_CONV_DC_AMP);
-
+	#ifdef CURRENT_DC_PIN
+		currentDC = ABS((adc_buffer.current_dc - offsetdc) * MOTOR_AMP_CONV_DC_AMP);
+	#else
+		currentDC = 0.42; 	// robo testing with no CURRENT_DC_PIN yet
+	#endif
+	
   // Disable PWM when current limit is reached (current chopping), enable is not set or timeout is reached
 	if (currentDC > DC_CUR_LIMIT || bldc_enable == RESET || timedOut == SET)
 	{
 		timer_automatic_output_disable(TIMER_BLDC);		
+		DEBUG_LedSet(SET)
   }
 	else
 	{
 		timer_automatic_output_enable(TIMER_BLDC);
+		DEBUG_LedSet(hall_a == 0)
   }
 	
   // Read hall sensors
@@ -202,6 +211,7 @@ void CalculateBLDC(void)
   hall_b = gpio_input_bit_get(HALL_B_PORT, HALL_B_PIN);
 	hall_c = gpio_input_bit_get(HALL_C_PORT, HALL_C_PIN);
   
+	
 	// Determine current position based on hall sensors
   hall = hall_a * 1 + hall_b * 2 + hall_c * 4;
   pos = hall_to_pos[hall];

@@ -6,18 +6,30 @@
 #define TODO_PIN	GPIO_PIN_15	// B15 is not accessibla on the smaller QFN32 32 pin MCU version
 
 
-// LED defines
-#define LED_GREEN TODO_PIN				// lerwinDE: GPIO_PIN_14 - in conflict with flash pins DIO and CLK !!!
-#define LED_GREEN_PORT TODO_PORT	// lerwinDE: GPIOA
-#define LED_ORANGE TODO_PIN				// TODO
-#define LED_ORANGE_PORT TODO_PORT	// TODO
-#define LED_RED TODO_PIN					// lerwinDE: GPIO_PIN_13 - in conflict with flash pins DIO and CLK !!!
-#define LED_RED_PORT TODO_PORT		// lerwinDE: GPIOA
+#define DEBUG_LED_PIN 	GPIO_PIN_1	// lerwinDE: blue led panel
+#define DEBUG_LED_PORT 	GPIOF				// lerwinDE: blue led panel
+#ifdef DEBUG_LED_PIN
+  #define DEBUG_LedSet(bSet){gpio_bit_write(DEBUG_LED_PORT, DEBUG_LED_PIN, bSet);}
+#else
+  #define DEBUG_LedSet(bSet)
+#endif
 
-#define UPPER_LED_PIN TODO_PIN		// TODO
-#define UPPER_LED_PORT TODO_PORT	// TODO
-#define LOWER_LED_PIN TODO_PIN		// TODO
-#define LOWER_LED_PORT TODO_PORT	// TODO
+
+// LED defines
+#define LED_GREEN 			TODO_PIN	// lerwinDE: GPIO_PIN_14 - in conflict with flash pins DIO and CLK !!!
+#define LED_GREEN_PORT 	TODO_PORT	// lerwinDE: GPIOA
+#define LED_ORANGE 			TODO_PIN	// TODO
+#define LED_ORANGE_PORT	TODO_PORT	// TODO
+#define LED_RED 				TODO_PIN		// lerwinDE: GPIO_PIN_13 - in conflict with flash pins DIO and CLK !!!
+#define LED_RED_PORT 		TODO_PORT		// lerwinDE: GPIOA
+
+#define UPPER_LED_PIN 	TODO_PIN	// TODO
+#define UPPER_LED_PORT 	TODO_PORT	// TODO
+#define LOWER_LED_PIN 	TODO_PIN	// TODO
+#define LOWER_LED_PORT 	TODO_PORT	// TODO
+
+
+
 
 // Mosfet output
 // seems to be an ordinary LED output ?
@@ -31,8 +43,8 @@
 #define RCU_TIMER_BLDC RCU_TIMER0
 #define TIMER_BLDC TIMER0
 #define TIMER_BLDC_CHANNEL_G TIMER_CH_2
-#define TIMER_BLDC_GH_PIN GPIO_PIN_8		// robo, based on Herleybob:defines.h
-#define TIMER_BLDC_GH_PORT GPIOA				// robo, based on Herleybob:defines.h
+#define TIMER_BLDC_GH_PIN GPIO_PIN_8		// GPIO_PIN_8	robo, based on Herleybob:defines.h
+#define TIMER_BLDC_GH_PORT GPIOA				// GPIOA robo, based on Herleybob:defines.h
 #define TIMER_BLDC_GL_PIN GPIO_PIN_7		// robo, based on Herleybob:defines.h
 #define TIMER_BLDC_GL_PORT GPIOA				// robo, based on Herleybob:defines.h
 // Channel B

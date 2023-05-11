@@ -148,6 +148,11 @@ void GPIO_init(void)
 	gpio_output_options_set(UPPER_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, UPPER_LED_PIN);
 	gpio_mode_set(LOWER_LED_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,LOWER_LED_PIN);	
 	gpio_output_options_set(LOWER_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, LOWER_LED_PIN);
+
+	#ifdef DEBUG_LED_PIN
+		gpio_mode_set(DEBUG_LED_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,DEBUG_LED_PIN);	
+		gpio_output_options_set(DEBUG_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, DEBUG_LED_PIN);
+	#endif
 	
 	// Init mosfet output
 	//gpio_mode_set(MOSFET_OUT_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, MOSFET_OUT_PIN);	
@@ -292,7 +297,7 @@ void PWM_init(void)
 	timerBldc_break_parameter_struct.ideloffstate 		= TIMER_IOS_STATE_DISABLE;
 	timerBldc_break_parameter_struct.protectmode			= TIMER_CCHP_PROT_OFF;
 	timerBldc_break_parameter_struct.deadtime 				= DEAD_TIME;
-	timerBldc_break_parameter_struct.breakstate				= TIMER_BREAK_ENABLE;
+	timerBldc_break_parameter_struct.breakstate				= TIMER_BREAK_DISABLE;		// Gen2.2 HarleyBob used TIMER_BREAK_DISABLE instead of TIMER_BREAK_ENABLE
 	timerBldc_break_parameter_struct.breakpolarity		= TIMER_BREAK_POLARITY_LOW;
 	timerBldc_break_parameter_struct.outputautostate 	= TIMER_OUTAUTO_ENABLE;
 	

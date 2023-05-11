@@ -1,32 +1,3 @@
-/*
-* This file is part of the hoverboard-firmware-hack-V2 project. The 
-* firmware is used to hack the generation 2 board of the hoverboard.
-* These new hoverboards have no mainboard anymore. They consist of 
-* two Sensorboards which have their own BLDC-Bridge per Motor and an
-* ARM Cortex-M3 processor GD32F130C8.
-*
-* Copyright (C) 2018 Florian Staeblein
-* Copyright (C) 2018 Jakob Broemauer
-* Copyright (C) 2018 Kai Liebich
-* Copyright (C) 2018 Christoph Lehnert
-*
-* The program is based on the hoverboard project by Niklas Fauth. The 
-* structure was tried to be as similar as possible, so that everyone 
-* could find a better way through the code.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #define ARM_MATH_CM3
 
@@ -46,6 +17,22 @@
 #include <math.h>     
 //#include "arm_math.h" 
 
+#ifdef BUZZER
+	extern uint8_t buzzerFreq;    						// global variable for the buzzer pitch. can be 1, 2, 3, 4, 5, 6, 7...
+	extern uint8_t buzzerPattern; 						// global variable for the buzzer pattern. can be 1, 2, 3, 4, 5, 6, 7...
+  #define BuzzerSet(iFrequency, iPattern) {buzzerFreq = iFrequency;buzzerPattern = iPattern;}
+  #define BUZZER_MelodyDown(){for (int8_t iFreq=8; iFreq>= 0; iFreq--){ buzzerFreq = iFreq; Delay(10); } buzzerFreq = 0;}
+  #define BUZZER_MelodyUp(){for (int8_t iFreq=0; iFreq<= 8; iFreq++){ buzzerFreq = iFreq; Delay(10); } buzzerFreq = 0;}
+#else
+  #define BuzzerSet(iFrequency, iPattern)
+  #define BUZZER_MelodyDown()
+  #define BUZZER_MelodyUp()
+#endif
+
+	
+		
+    
+
 #ifdef MASTER
 
 
@@ -56,8 +43,6 @@ int32_t speed = 0; 												// global variable for speed.    -1000 to 1000
 FlagStatus activateWeakening = RESET;			// global variable for weakening
 FlagStatus beepsBackwards = SET;  			// global variable for beeps backwards
 			
-extern uint8_t buzzerFreq;    						// global variable for the buzzer pitch. can be 1, 2, 3, 4, 5, 6, 7...
-extern uint8_t buzzerPattern; 						// global variable for the buzzer pattern. can be 1, 2, 3, 4, 5, 6, 7...
 			
 extern float batteryVoltage; 							// global variable for battery voltage
 extern float currentDC; 									// global variable for current dc
@@ -271,7 +256,6 @@ int main (void)
 	FlagStatus chargeStateLowActive = SET;
 	int16_t sendSlaveValue = 0;
 	uint8_t sendSlaveIdentifier = 0;
-	int8_t index = 8;
   int16_t pwmSlave = 0;
 	int16_t pwmMaster = 0;
 	int16_t scaledSpeed = 0;
@@ -280,6 +264,8 @@ int main (void)
 	float steerAngle = 0;
 	float xScale = 0;
 #endif
+
+	
 	
 	//SystemClock_Config();
   SystemCoreClockUpdate();
@@ -301,6 +287,14 @@ int main (void)
 	
 	// Init GPIOs
 	GPIO_init();
+
+	DEBUG_LedSet(SET)
+	
+	#ifdef DEBUG_LED_PIN
+		gpio_mode_set(DEBUG_LED_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,DEBUG_LED_PIN);	
+		gpio_output_options_set(DEBUG_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, DEBUG_LED_PIN);
+	#endif
+	
 	
 	// Activate self hold direct after GPIO-init
 	gpio_bit_write(SELF_HOLD_PORT, SELF_HOLD_PIN, SET);
@@ -321,28 +315,21 @@ int main (void)
 	// Init usart steer/bluetooth
 	USART_Steer_COM_init();
 
-#ifdef BUZZER
 	// Startup-Sound
-3	for (; index >= 0; index--)
-	{
-    buzzerFreq = index;
-    Delay(10);
-  }
-  buzzerFreq = 0;
-#endif
+	BUZZER_MelodyDown()
 
 #ifdef MASTER
 	// Wait until button is released
-	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN))
-	{
-		fwdgt_counter_reload();	// Reload watchdog while button is pressed
-	}
+	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN)){fwdgt_counter_reload();} // Reload watchdog while button is pressed
 #endif
 
   while(1)
 	{
 #ifdef MASTER
+
 		steerCounter++;		// something like DELAY_IN_MAIN_LOOP = 5 ms
+		//DEBUG_LedSet((steerCounter%20) < 10)		
+		
 		if ((steerCounter % 2) == 0)
 		{	
 			// Request steering data
@@ -352,8 +339,6 @@ int main (void)
 		#ifdef TEST_SPEED
 			speed = 3 * (ABS((	((int32_t)steerCounter+100) % 400) - 200) - 100);
 			//speed = 300;
-		
-			gpio_bit_write(LED_GREEN_PORT, LED_GREEN, (steerCounter%200) < 100);		
 		#endif
 		
 		// Calculate expo rate for less steering with higher speeds
@@ -385,6 +370,7 @@ int main (void)
 		
 		// Enable is depending on charger is connected or not
 		enable = chargeStateLowActive;
+		//enable = SET;		// robo testing
 		
 		// Enable channel output
 		SetEnable(enable);
@@ -437,17 +423,15 @@ int main (void)
 			// Show orange battery light
 			ShowBatteryState(LED_ORANGE);
 			
-      buzzerFreq = 5;
-      buzzerPattern = 8;
+			BuzzerSet(5,8)	// (iFrequency, iPattern)
     }
 		// Make even more sound and show red battery symbol when battery level BAT_LOW_DEAD is reached
 		else if  (batteryVoltage > BAT_LOW_DEAD && batteryVoltage < BAT_LOW_LVL2)
 		{
 			// Show red battery light
 			ShowBatteryState(LED_RED);
-			
-      buzzerFreq = 5;
-      buzzerPattern = 1;
+
+			BuzzerSet(5,1)	// (iFrequency, iPattern)
     }
 		// Shut device off, when battery is dead
 		else if (batteryVoltage < BAT_LOW_DEAD)
@@ -496,18 +480,7 @@ int main (void)
 //----------------------------------------------------------------------------
 void ShutOff(void)
 {
-	int index = 0;
-
-	
-	#ifdef BUZZER
-		buzzerPattern = 0;
-		for (; index < 8; index++)
-		{
-			buzzerFreq = index;
-			Delay(10);
-		}
-		buzzerFreq = 0;
-	#endif
+	BUZZER_MelodyUp()
 
 	
 	#ifdef USART_MASTERSLAVE
@@ -558,13 +531,11 @@ void BeepsBackwards(FlagStatus beepsBackwards)
 	// If the speed is less than -50, beep while driving backwards
 	if (beepsBackwards == SET && speed < -50)
 	{
-		buzzerFreq = 5;
-    buzzerPattern = 4;
+		BuzzerSet(5,4)	// (iFrequency, iPattern)
 	}
 	else
 	{
-		buzzerFreq = 0;
-		buzzerPattern = 0;
+		BuzzerSet(0,0)	// (iFrequency, iPattern)
 	}
 }
 #endif
