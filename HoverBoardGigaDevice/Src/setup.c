@@ -131,6 +131,11 @@ void GPIO_init(void)
 	rcu_periph_clock_enable(RCU_GPIOC);
 	rcu_periph_clock_enable(RCU_GPIOF);
 	
+	#ifdef DEBUG_LED_PIN
+		gpio_mode_set(DEBUG_LED_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,DEBUG_LED_PIN);	
+		gpio_output_options_set(DEBUG_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, DEBUG_LED_PIN);
+	#endif
+	
 	// Init green LED
 	gpio_mode_set(LED_GREEN_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,LED_GREEN);	
 	gpio_output_options_set(LED_GREEN_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, LED_GREEN);

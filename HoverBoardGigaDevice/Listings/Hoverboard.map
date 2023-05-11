@@ -515,8 +515,8 @@ Image Symbol Table
     .ARM.Collect$$rtexit$$00000003           0x080001f8   Section        4  rtexit2.o(.ARM.Collect$$rtexit$$00000003)
     .ARM.Collect$$rtexit$$00000004           0x080001fc   Section        6  rtexit2.o(.ARM.Collect$$rtexit$$00000004)
     [Anonymous Symbol]                       0x08000204   Section        0  main.o(.text)
-    [Anonymous Symbol]                       0x08000698   Section        0  bldc.o(.text)
-    [Anonymous Symbol]                       0x08000994   Section        0  setup.o(.text)
+    [Anonymous Symbol]                       0x08000680   Section        0  bldc.o(.text)
+    [Anonymous Symbol]                       0x0800097c   Section        0  setup.o(.text)
     [Anonymous Symbol]                       0x08001018   Section        0  it.o(.text)
     [Anonymous Symbol]                       0x08001154   Section        0  comms.o(.text)
     [Anonymous Symbol]                       0x080011c0   Section        0  commssteering.o(.text)
@@ -664,18 +664,18 @@ Image Symbol Table
     __rt_exit_ls                             0x080001f9   Thumb Code     0  rtexit2.o(.ARM.Collect$$rtexit$$00000003)
     __rt_exit_prels_1                        0x080001f9   Thumb Code     0  rtexit2.o(.ARM.Collect$$rtexit$$00000002)
     __rt_exit_exit                           0x080001fd   Thumb Code     0  rtexit2.o(.ARM.Collect$$rtexit$$00000004)
-    main                                     0x08000205   Thumb Code  1066  main.o(.text)
-    ShowBatteryState                         0x08000631   Thumb Code    62  main.o(.text)
-    BeepsBackwards                           0x08000671   Thumb Code     2  main.o(.text)
-    ShutOff                                  0x08000675   Thumb Code    34  main.o(.text)
-    blockPWM                                 0x08000699   Thumb Code   102  bldc.o(.text)
-    SetEnable                                0x08000701   Thumb Code    12  bldc.o(.text)
-    SetPWM                                   0x0800070d   Thumb Code    38  bldc.o(.text)
-    CalculateBLDC                            0x08000735   Thumb Code   606  bldc.o(.text)
-    Interrupt_init                           0x08000995   Thumb Code     8  setup.o(.text)
-    Watchdog_init                            0x0800099d   Thumb Code    56  setup.o(.text)
-    TimeoutTimer_init                        0x080009d5   Thumb Code    92  setup.o(.text)
-    GPIO_init                                0x08000a31   Thumb Code   696  setup.o(.text)
+    main                                     0x08000205   Thumb Code  1042  main.o(.text)
+    ShowBatteryState                         0x08000619   Thumb Code    62  main.o(.text)
+    BeepsBackwards                           0x08000659   Thumb Code     2  main.o(.text)
+    ShutOff                                  0x0800065d   Thumb Code    34  main.o(.text)
+    blockPWM                                 0x08000681   Thumb Code   102  bldc.o(.text)
+    SetEnable                                0x080006e9   Thumb Code    12  bldc.o(.text)
+    SetPWM                                   0x080006f5   Thumb Code    38  bldc.o(.text)
+    CalculateBLDC                            0x0800071d   Thumb Code   606  bldc.o(.text)
+    Interrupt_init                           0x0800097d   Thumb Code     8  setup.o(.text)
+    Watchdog_init                            0x08000985   Thumb Code    56  setup.o(.text)
+    TimeoutTimer_init                        0x080009bd   Thumb Code    92  setup.o(.text)
+    GPIO_init                                0x08000a19   Thumb Code   720  setup.o(.text)
     PWM_init                                 0x08000ce9   Thumb Code   368  setup.o(.text)
     ADC_init                                 0x08000e59   Thumb Code   234  setup.o(.text)
     USART_MasterSlave_init                   0x08000f45   Thumb Code     2  setup.o(.text)
@@ -1179,11 +1179,11 @@ Memory Map of the image
     0x080001f8   0x080001f8   0x00000004   Code   RO          207    .ARM.Collect$$rtexit$$00000003  c_w.l(rtexit2.o)
     0x080001fc   0x080001fc   0x00000006   Code   RO          208    .ARM.Collect$$rtexit$$00000004  c_w.l(rtexit2.o)
     0x08000202   0x08000202   0x00000002   PAD
-    0x08000204   0x08000204   0x00000492   Code   RO            1    .text               main.o
-    0x08000696   0x08000696   0x00000002   PAD
-    0x08000698   0x08000698   0x000002fa   Code   RO           13    .text               bldc.o
-    0x08000992   0x08000992   0x00000002   PAD
-    0x08000994   0x08000994   0x00000684   Code   RO           35    .text               setup.o
+    0x08000204   0x08000204   0x0000047a   Code   RO            1    .text               main.o
+    0x0800067e   0x0800067e   0x00000002   PAD
+    0x08000680   0x08000680   0x000002fa   Code   RO           13    .text               bldc.o
+    0x0800097a   0x0800097a   0x00000002   PAD
+    0x0800097c   0x0800097c   0x0000069c   Code   RO           35    .text               setup.o
     0x08001018   0x08001018   0x0000013a   Code   RO           45    .text               it.o
     0x08001152   0x08001152   0x00000002   PAD
     0x08001154   0x08001154   0x0000006c   Code   RO           50    .text               comms.o
@@ -1318,8 +1318,8 @@ Image component sizes
       3424         44          0          0          0          0   gd32f1x0_timer.o
       1598          8          0          0          0          0   gd32f1x0_usart.o
        314          0          0          1          8          0   it.o
-      1170          0        724          1         28          0   main.o
-      1668          0          0          0        145          0   setup.o
+      1146          0        724          1         28          0   main.o
+      1692          0          0          0        145          0   setup.o
         64         26        360          0       2048          0   startup_gd32f1x0.o
        316         16          0          4          0          0   system_gd32f1x0.o
 

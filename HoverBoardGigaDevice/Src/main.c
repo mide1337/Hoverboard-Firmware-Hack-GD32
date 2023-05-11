@@ -57,7 +57,6 @@ uint32_t steerCounter = 0;								// Steer counter for setting update rate
 void ShowBatteryState(uint32_t pin);
 void BeepsBackwards(FlagStatus beepsBackwards);
 void ShutOff(void);
-#endif
 
 const float lookUpTableAngle[181] =  
 {
@@ -243,6 +242,7 @@ const float lookUpTableAngle[181] =
   -1.067005175,
   -1
 };
+#endif
 
 
 //----------------------------------------------------------------------------
@@ -272,12 +272,8 @@ int main (void)
   SysTick_Config(SystemCoreClock / 100);
 	
 	// Init watchdog
-	if (
-		Watchdog_init() == ERROR)
-	{
-		// If an error accours with watchdog initialization do not start device
-		while(1);
-	}
+	if (	Watchdog_init() == ERROR)
+		while(1);	// If an error accours with watchdog initialization do not start device
 	
 	// Init Interrupts
 	Interrupt_init();
@@ -287,13 +283,8 @@ int main (void)
 	
 	// Init GPIOs
 	GPIO_init();
-
 	DEBUG_LedSet(SET)
 	
-	#ifdef DEBUG_LED_PIN
-		gpio_mode_set(DEBUG_LED_PORT , GPIO_MODE_OUTPUT, GPIO_PUPD_NONE,DEBUG_LED_PIN);	
-		gpio_output_options_set(DEBUG_LED_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_10MHZ, DEBUG_LED_PIN);
-	#endif
 	
 	
 	// Activate self hold direct after GPIO-init
