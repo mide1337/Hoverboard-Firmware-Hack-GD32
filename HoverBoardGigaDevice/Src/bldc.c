@@ -224,6 +224,15 @@ void CalculateBLDC(void)
 	
   // Update PWM channels based on position y(ellow), b(lue), g(reen)
   blockPWM(bldc_outputFilterPwm, pos, &y, &b, &g);
+
+	#ifdef BLDC_WEAKENING
+		int weaku, weakv, weakw;
+		if (bldc_outputFilterPwm > 0)
+			blockPWM(bldc_outputFilterPwm, (pos+5) % 6, &weaku, &weakv, &weakw);
+		else 
+			blockPWM(-bldc_outputFilterPwm, (pos+1) % 6, &weaku, &weakv, &weakw);
+		g += weaku;	b += weakv;	y += weakw;
+	#endif
 	
 	// Set PWM output (pwm_res/2 is the mean value, setvalue has to be between 10 and pwm_res-10)
 	timer_channel_output_pulse_value_config(TIMER_BLDC, TIMER_BLDC_CHANNEL_G, CLAMP(g + pwm_res / 2, 10, pwm_res-10));
@@ -231,10 +240,7 @@ void CalculateBLDC(void)
 	timer_channel_output_pulse_value_config(TIMER_BLDC, TIMER_BLDC_CHANNEL_Y, CLAMP(y + pwm_res / 2, 10, pwm_res-10));
 	
 	// Increments with 62.5us
-	if(speedCounter < 4000) // No speed after 250ms
-	{
-		speedCounter++;
-	}
+	if(speedCounter < 4000) speedCounter++;	// No speed after 250ms
 	
 	// Every time position reaches value 1, one round is performed (rising edge)
 	if (lastPos != 1 && pos == 1)
@@ -242,14 +248,8 @@ void CalculateBLDC(void)
 		realSpeed = 1991.81f / (float)speedCounter; //[km/h]
 		speedCounter = 0;
 	}
-	else
-	{
-		if (speedCounter >= 4000)
-		{
-			realSpeed = 0;
-		}
-	}
-
+	else if (speedCounter >= 4000)	realSpeed = 0;
+	
 	// Safe last position
 	lastPos = pos;
 }
