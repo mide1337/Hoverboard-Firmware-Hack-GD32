@@ -87,8 +87,10 @@ void UpdateUSARTSteerInput(void)
 			SerialServer2Hover* pData = (SerialServer2Hover*) aReceiveBuffer;
 			if ( pData->checksum == CalcCRC(aReceiveBuffer, sizeof(SerialServer2Hover) - 2))	// first bytes except crc
 			{
-				speed = pData->iSpeed;
-				steer = pData->iSteer;
+				#ifndef TEST_SPEED	// only use received uart command if NOT in TEST_SPEED mode
+					speed = pData->iSpeed;
+					steer = pData->iSteer;
+				#endif
 				//if (speed > 300) speed = 300;	else if (speed < -300) speed = -300;		// for testing this function
 
 				ResetTimeout();	// Reset the pwm timout to avoid stopping motors

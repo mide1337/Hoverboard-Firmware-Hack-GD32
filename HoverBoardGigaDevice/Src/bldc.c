@@ -169,7 +169,7 @@ void CalculateBLDC(void)
 		if (buzzerTimer % 100 == 0)
 			batteryVoltage = batteryVoltage * 0.999 + ((float)adc_buffer.v_batt * ADC_BATTERY_VOLT) * 0.001;
 	#else
-		batteryVoltage = BAT_CELLS * 3.6;		// testing with no CURRENT_DC_PIN yet
+		batteryVoltage = BAT_CELLS * 3.6;		// testing with no VBATT_PIN yet
 	#endif
 	
   buzzerTimer++;	// also used to calculate battery voltage :-/

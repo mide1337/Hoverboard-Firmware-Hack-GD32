@@ -102,6 +102,19 @@ uint16_t GetSpeedBlink(void);
 void SetSpeedStrobe(uint16_t speed);
 uint16_t GetSpeedStrobe(void);
 
+// Sets upper LED value which will be send to master
+void SetUpperLEDMaster(FlagStatus value);
+
+// Returns upper LED value sent by master
+FlagStatus GetUpperLEDMaster(void);
+
+// Sets lower LED value which will be send to master
+void SetLowerLEDMaster(FlagStatus value);
+
+// Returns lower LED value sent by master
+FlagStatus GetLowerLEDMaster(void);
+
+
 #endif
 
 #endif

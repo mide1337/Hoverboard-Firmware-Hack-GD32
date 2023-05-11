@@ -21,7 +21,7 @@
 	extern uint8_t buzzerFreq;    						// global variable for the buzzer pitch. can be 1, 2, 3, 4, 5, 6, 7...
 	extern uint8_t buzzerPattern; 						// global variable for the buzzer pattern. can be 1, 2, 3, 4, 5, 6, 7...
   #define BuzzerSet(iFrequency, iPattern) {buzzerFreq = iFrequency;buzzerPattern = iPattern;}
-  #define BUZZER_MelodyDown(){for (int8_t iFreq=8; iFreq>= 0; iFreq--){ buzzerFreq = iFreq; Delay(10); } buzzerFreq = 0;}
+  #define BUZZER_MelodyDown(){int8_t iFreq=8;for (iFreq; iFreq>= 0; iFreq--){ buzzerFreq = iFreq; Delay(10); } buzzerFreq = 0;}
   #define BUZZER_MelodyUp(){for (int8_t iFreq=0; iFreq<= 8; iFreq++){ buzzerFreq = iFreq; Delay(10); } buzzerFreq = 0;}
 #else
   #define BuzzerSet(iFrequency, iPattern)
@@ -31,6 +31,8 @@
 
 	
 		
+uint32_t steerCounter = 0;								// Steer counter for setting update rate
+int32_t speed = 0; 												// global variable for speed.    -1000 to 1000
     
 
 #ifdef MASTER
@@ -39,7 +41,6 @@
 DataSlave oDataSlave;
 
 int32_t steer = 0; 												// global variable for steering. -1000 to 1000
-int32_t speed = 0; 												// global variable for speed.    -1000 to 1000
 FlagStatus activateWeakening = RESET;			// global variable for weakening
 FlagStatus beepsBackwards = SET;  			// global variable for beeps backwards
 			
@@ -52,7 +53,6 @@ uint8_t slaveError = 0;										// global variable for slave error
 extern FlagStatus timedOut;								// Timeoutvariable set by timeout timer
 
 uint32_t inactivity_timeout_counter = 0;	// Inactivity counter
-uint32_t steerCounter = 0;								// Steer counter for setting update rate
 
 void ShowBatteryState(uint32_t pin);
 void BeepsBackwards(FlagStatus beepsBackwards);
@@ -285,8 +285,6 @@ int main (void)
 	GPIO_init();
 	DEBUG_LedSet(SET)
 	
-	
-	
 	// Activate self hold direct after GPIO-init
 	gpio_bit_write(SELF_HOLD_PORT, SELF_HOLD_PIN, SET);
 
@@ -316,21 +314,23 @@ int main (void)
 
   while(1)
 	{
-#ifdef MASTER
-
 		steerCounter++;		// something like DELAY_IN_MAIN_LOOP = 5 ms
 		//DEBUG_LedSet((steerCounter%20) < 10)		
-		
-		if ((steerCounter % 2) == 0)
-		{	
-			// Request steering data
-			SendSteerDevice();
-		}
-		
+
 		#ifdef TEST_SPEED
 			speed = 3 * (ABS((	((int32_t)steerCounter+100) % 400) - 200) - 100);
 			//speed = 300;
+
+			#ifdef SLAVE
+				SetEnable(SET);
+				SetPWM(-speed);
+			#endif
 		#endif
+
+		
+	#ifdef MASTER
+		if ((steerCounter % 2) == 0)
+			SendSteerDevice();	// Request steering data
 		
 		// Calculate expo rate for less steering with higher speeds
 		expo = MAP((float)ABS(speed), 0, 1000, 1, 0.5);
@@ -394,10 +394,7 @@ int main (void)
 		
 		// Increment identifier
 		sendSlaveIdentifier++;
-		if (sendSlaveIdentifier > 2)
-		{
-			sendSlaveIdentifier = 0;
-		}
+		if (sendSlaveIdentifier > 2)	sendSlaveIdentifier = 0;
 		
 		// Show green battery symbol when battery level BAT_LOW_LVL1 is reached
     if (batteryVoltage > BAT_LOW_LVL1)
@@ -408,6 +405,7 @@ int main (void)
 			// Beeps backwards
 			BeepsBackwards(beepsBackwards);
 		}
+		
 		// Make silent sound and show orange battery symbol when battery level BAT_LOW_LVL2 is reached
     else if (batteryVoltage > BAT_LOW_LVL2 && batteryVoltage < BAT_LOW_LVL1)
 		{

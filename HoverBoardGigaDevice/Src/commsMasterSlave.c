@@ -10,6 +10,44 @@
 #include "stdio.h"
 #include "string.h"
 
+// Variables which will be written by master frame
+int16_t currentDCMaster = 0;
+int16_t batteryMaster = 0;
+int16_t realSpeedMaster = 0;
+FlagStatus mosfetOutMaster = RESET;
+FlagStatus beepsBackwardsMaster = RESET;
+
+// Returns current value sent by master
+int16_t GetCurrentDCMaster(void)
+{
+	return currentDCMaster;
+}
+
+// Returns battery value sent by master
+int16_t GetBatteryMaster(void)
+{
+	return batteryMaster;
+}
+
+// Returns realspeed value sent by master
+int16_t GetRealSpeedMaster(void)
+{
+	return realSpeedMaster;
+}
+
+// Sets beepsBackwards value which will be send to master
+void SetBeepsBackwardsMaster(FlagStatus value)
+{
+	beepsBackwardsMaster = value;
+}
+
+// Returns beepsBackwardsMaster value sent by master
+FlagStatus GetBeepsBackwardsMaster(void)
+{
+	return beepsBackwardsMaster;
+}
+
+
 #ifdef USART_MASTERSLAVE
 
 #pragma pack(1)
@@ -32,6 +70,7 @@
 	} SerialMaster2Slave;
 
 
+
 #ifdef MASTER
 	#define SerialReceive SerialSlave2Master
 	#define SerialSend SerialMaster2Slave
@@ -48,16 +87,7 @@
 	extern float currentDC; 									// global variable for current dc
 	extern float realSpeed; 									// global variable for real Speed
 
-	// Variables which will be send to master
-	FlagStatus upperLEDMaster = RESET;
-	FlagStatus lowerLEDMaster = RESET;
-	FlagStatus mosfetOutMaster = RESET;
-	FlagStatus beepsBackwardsMaster = RESET;
 
-	// Variables which will be written by master frame
-	int16_t currentDCMaster = 0;
-	int16_t batteryMaster = 0;
-	int16_t realSpeedMaster = 0;
 
 	void CheckGeneralValue(uint8_t identifier, int16_t value);
 #endif
@@ -194,8 +224,10 @@ void ProessReceived(SerialReceive* pData)
 	// Set functions according to the variables
 	gpio_bit_write(LED_GREEN_PORT, LED_GREEN, chargeStateLowActive == SET ? SET : RESET);
 	gpio_bit_write(LED_RED_PORT, LED_RED, chargeStateLowActive == RESET ? SET : RESET);
-	SetEnable(enable);
-	SetPWM(pwmSlave);
+	#ifndef TEST_SPEED	// only use received uart command if NOT in TEST_SPEED mode
+		SetEnable(enable);
+		SetPWM(pwmSlave);
+	#endif
 	CheckGeneralValue(identifier, value);
 	
 	// Send answer
@@ -283,61 +315,7 @@ void CheckGeneralValue(uint8_t identifier, int16_t value)
 	}
 }
 
-//----------------------------------------------------------------------------
-// Returns current value sent by master
-//----------------------------------------------------------------------------
-int16_t GetCurrentDCMaster(void)
-{
-	return currentDCMaster;
-}
 
-//----------------------------------------------------------------------------
-// Returns battery value sent by master
-//----------------------------------------------------------------------------
-int16_t GetBatteryMaster(void)
-{
-	return batteryMaster;
-}
-
-//----------------------------------------------------------------------------
-// Returns realspeed value sent by master
-//----------------------------------------------------------------------------
-int16_t GetRealSpeedMaster(void)
-{
-	return realSpeedMaster;
-}
-
-//----------------------------------------------------------------------------
-// Sets upper LED value which will be send to master
-//----------------------------------------------------------------------------
-void SetUpperLEDMaster(FlagStatus value)
-{
-	upperLEDMaster = value;
-}
-
-//----------------------------------------------------------------------------
-// Returns upper LED value sent by master
-//----------------------------------------------------------------------------
-FlagStatus GetUpperLEDMaster(void)
-{
-	return upperLEDMaster;
-}
-
-//----------------------------------------------------------------------------
-// Sets lower LED value which will be send to master
-//----------------------------------------------------------------------------
-void SetLowerLEDMaster(FlagStatus value)
-{
-	lowerLEDMaster = value;
-}
-
-//----------------------------------------------------------------------------
-// Returns lower LED value sent by master
-//----------------------------------------------------------------------------
-FlagStatus GetLowerLEDMaster(void)
-{
-	return lowerLEDMaster;
-}
 
 //----------------------------------------------------------------------------
 // Sets mosfetOut value which will be send to master
@@ -355,21 +333,6 @@ FlagStatus GetMosfetOutMaster(void)
 	return mosfetOutMaster;
 }
 
-//----------------------------------------------------------------------------
-// Sets beepsBackwards value which will be send to master
-//----------------------------------------------------------------------------
-void SetBeepsBackwardsMaster(FlagStatus value)
-{
-	beepsBackwardsMaster = value;
-}
-
-//----------------------------------------------------------------------------
-// Returns beepsBackwardsMaster value sent by master
-//----------------------------------------------------------------------------
-FlagStatus GetBeepsBackwardsMaster(void)
-{
-	return beepsBackwardsMaster;
-}
 #endif
 
 #endif
