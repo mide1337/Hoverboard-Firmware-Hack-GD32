@@ -110,8 +110,8 @@
 #define USART_STEER_AF	GPIO_AF_1				// robo, based on Herleybob:setup.c: usart_config(void)
 #define USART_STEER_COM_TX_PIN GPIO_PIN_15	// lerwinDE
 #define USART_STEER_COM_TX_PORT GPIOA				// lerwinDE
-#define USART_STEER_COM_RX_PIN GPIO_PIN_7		// robo, based on Herleybob:setup.c: usart_config(void)
-#define USART_STEER_COM_RX_PORT GPIOA				// robo, based on Herleybob:setup.c: usart_config(void)
+#define USART_STEER_COM_RX_PIN TODO_PIN		// GPIO_PIN_7 robo, based on Herleybob:setup.c: usart_config(void)
+#define USART_STEER_COM_RX_PORT TODO_PORT				// GPIOA robo, based on Herleybob:setup.c: usart_config(void)
 
 #ifdef BUZZER
 	// Buzzer defines
