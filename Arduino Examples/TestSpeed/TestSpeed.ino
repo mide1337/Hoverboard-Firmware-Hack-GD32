@@ -6,7 +6,7 @@
 
 
 #define _DEBUG      // debug output to first hardware serial port
-#define DEBUG_RX    // additional hoverboard-rx debug output
+//#define DEBUG_RX    // additional hoverboard-rx debug output
 
 #include "util.h"
 #include "hoverserial.h"

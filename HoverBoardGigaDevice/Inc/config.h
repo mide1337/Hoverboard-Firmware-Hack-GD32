@@ -18,7 +18,7 @@
 
 #define MASTER		// uncomment if firmware is for slave board
 
-#define TEST_SPEED	// will discard uart input and repeat speed from -300 to 300 instead
+//#define TEST_SPEED	// will discard uart input and repeat speed from -300 to 300 instead
 
 #ifdef MASTER
 	#define SPEED_COEFFICIENT   -1

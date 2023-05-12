@@ -82,7 +82,7 @@ void DebugOut(uint8_t aBuffer[], uint8_t iSize)
 //void Send(Serial& oSerial, int16_t uSteer, int16_t uSpeed)
 template <typename O,typename U> void HoverSend(O& oSerial, U uSteer, U uSpeed)
 {
-  //DEBUGT("uSteer",uSteer);DEBUGLN("uSpeed",uSpeed);
+  DEBUGT("uSteer",uSteer);DEBUGLN("uSpeed",uSpeed);
   SerialServer2Hover oData;
   oData.iSpeed    = (int16_t)uSpeed;
   oData.iSteer    = (int16_t)uSteer;

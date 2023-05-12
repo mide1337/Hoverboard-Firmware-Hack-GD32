@@ -95,7 +95,8 @@
 
 // Usart steer defines
 #define USART_STEER_COM USART0
-#define USART_STEER_AF	GPIO_AF_0				// robo
+#define USART_STEER_RCU RCU_USART0
+#define USART_STEER_AF	GPIO_AF_0
 #define USART_STEER_COM_TX_PIN GPIO_PIN_6	//SAME AS 2.0 but left open at missing bluetooth chip 
 #define USART_STEER_COM_TX_PORT GPIOB		//SAME AS 2.0 but left open at missing bluetooth chip 
 #define USART_STEER_COM_RX_PIN GPIO_PIN_7	//SAME AS 2.0 but left open at missing bluetooth chip 
