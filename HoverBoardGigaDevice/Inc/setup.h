@@ -39,7 +39,8 @@
 #define USART_MASTERSLAVE_DATA_RX_ADDRESS ((uint32_t)0x40004424)
 
 #define USART_STEER_COM_RX_BUFFERSIZE 1
-#define USART_STEER_COM_DATA_RX_ADDRESS ((uint32_t)0x40013824)
+#define USART_STEER_COM_DATA_RX_ADDRESS ((uint32_t)0x40013824)	//((uint32_t)0x40013824)
+// HarlebBob #define USART1_TDATA_ADDRESS    	((uint32_t)0x40004428)
 
 //----------------------------------------------------------------------------
 // Initializes the interrupts

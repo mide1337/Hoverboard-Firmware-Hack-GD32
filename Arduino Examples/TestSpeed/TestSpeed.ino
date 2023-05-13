@@ -39,6 +39,7 @@ void loop()
 
   int iSpeed = 3 * (ABS( (int)((iNow/20+200) % 400) - 200) - 100);   // repeats from +300 to -300 to +300 :-)
   int iSteer = 0;
+  //iSpeed /= 10;
   
   if (Receive(oSerialHover,oHoverFeedback))   // Reply only when you receive data
   {

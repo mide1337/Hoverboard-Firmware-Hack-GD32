@@ -312,6 +312,7 @@ int main (void)
 	while (gpio_input_bit_get(BUTTON_PORT, BUTTON_PIN)){fwdgt_counter_reload();} // Reload watchdog while button is pressed
 #endif
 
+	DEBUG_LedSet(RESET)
   while(1)
 	{
 		steerCounter++;		// something like DELAY_IN_MAIN_LOOP = 5 ms

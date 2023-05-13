@@ -85,10 +85,10 @@
 
 // ADC defines
 //#define VBATT_PIN	GPIO_PIN_0				// robo, no gpio_mode_set() inHerleybob:setup.c
-//#define VBATT_PORT GPIOA						// robo, no gpio_mode_set() inHerleybob:setup.c
+#define VBATT_PORT GPIOA						// robo, no gpio_mode_set() inHerleybob:setup.c
 #define VBATT_CHANNEL ADC_CHANNEL_17	// robo, based on Herleybob:setup.c: adc_regular_channel_config(2,ADC_CHANNEL_17,ADC_SAMPLETIME_13POINT5);
 //#define CURRENT_DC_PIN	GPIO_PIN_1	// robo, no gpio_mode_set() inHerleybob:setup.c
-//#define CURRENT_DC_PORT GPIOA				// robo, no gpio_mode_set() inHerleybob:setup.c
+#define CURRENT_DC_PORT GPIOA				// robo, no gpio_mode_set() inHerleybob:setup.c
 #define CURRENT_DC_CHANNEL ADC_CHANNEL_2	// robo, maybe adc_buf_t:adc is potentiometer input
 
 // Self hold defines
@@ -106,13 +106,13 @@
 #define BUTTON_PORT GPIOB						// robo, based on Herleybob:defines.h
 
 // Usart steer defines
-#define USART_STEER_COM USART1					// robo, based on Herleybob:setup.c: usart_config(void)
-#define USART_STEER_RCU RCU_USART1			// robo, based on Herleybob:setup.c: usart_config(void)
-#define USART_STEER_AF	GPIO_AF_1				// robo, based on Herleybob:setup.c: usart_config(void)
-#define USART_STEER_COM_TX_PIN GPIO_PIN_2		// lerwinDE :-)
-#define USART_STEER_COM_TX_PORT GPIOA				// lerwinDE :-)
-#define USART_STEER_COM_RX_PIN GPIO_PIN_15	// lerwinDE :-)
-#define USART_STEER_COM_RX_PORT GPIOA				// lerwinDE :-)
+#define USART_STEER_COM USART0					
+#define USART_STEER_RCU RCU_USART0			
+#define USART_STEER_AF	GPIO_AF_0				
+#define USART_STEER_COM_TX_PIN GPIO_PIN_6		// lerwinDE :-)
+#define USART_STEER_COM_TX_PORT GPIOB				// lerwinDE :-)
+#define USART_STEER_COM_RX_PIN GPIO_PIN_7	// lerwinDE :-)
+#define USART_STEER_COM_RX_PORT GPIOB				// lerwinDE :-)
 
 #ifdef BUZZER
 	// Buzzer defines

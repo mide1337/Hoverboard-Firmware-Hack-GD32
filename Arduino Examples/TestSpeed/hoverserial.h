@@ -23,12 +23,14 @@ typedef struct{
    uint16_t checksum;
 } SerialHover2Server;
 
-typedef struct{
-   uint8_t cStart = '/';;
+typedef struct __attribute__((packed, aligned(1))) {  // old version
+   uint8_t cStart = '/';                              // old version
+//typedef struct{   // new version
+//   uint16_t cStart = START_FRAME;   // new version
+
    int16_t  iSpeed = 0;
    int16_t  iSteer = 0;
    uint16_t checksum;
-   uint8_t cEnd = '\n';
 } SerialServer2Hover;
 
 uint16_t CalcCRC(uint8_t *ptr, int count)
@@ -79,18 +81,18 @@ void DebugOut(uint8_t aBuffer[], uint8_t iSize)
 
 
 // ########################## SEND ##########################
-//void Send(Serial& oSerial, int16_t uSteer, int16_t uSpeed)
-template <typename O,typename U> void HoverSend(O& oSerial, U uSteer, U uSpeed)
+//void Send(Serial& oSerial, int16_t iSteer, int16_t iSpeed)
+template <typename O,typename I> void HoverSend(O& oSerial, I iSteer, I iSpeed)
 {
-  DEBUGT("uSteer",uSteer);DEBUGLN("uSpeed",uSpeed);
+  //DEBUGT("iSteer",iSteer);DEBUGLN("iSpeed",iSpeed);
   SerialServer2Hover oData;
-  oData.iSpeed    = (int16_t)uSpeed;
-  oData.iSteer    = (int16_t)uSteer;
-  oData.checksum = CalcCRC((uint8_t*)&oData, 5);
-  oSerial.write((uint8_t*) &oData, sizeof(oData)); 
+  oData.iSpeed    = (int16_t)iSpeed;
+  oData.iSteer    = (int16_t)iSteer;
+  oData.checksum = CalcCRC((uint8_t*)&oData, sizeof(SerialServer2Hover)-2); // first bytes except crc
+  oSerial.write((uint8_t*) &oData, sizeof(SerialServer2Hover)); 
   //DebugOut((uint8_t*) &oData, sizeof(oData)); 
-
 }
+
 template <typename O,typename I> void HoverSendLR(O& oSerial, I iSpeedLeft, I iSpeedRight) // -1000 .. +1000
 {
   // speed coeff in config.h must be 1.0 : (DEFAULT_)SPEED_COEFFICIENT   16384
@@ -105,7 +107,15 @@ void HoverLog(SerialHover2Server& oData)
   DEBUGT("\tiAmpL",(float)oData.iAmpL/100.0);
   DEBUGT(" iAmpR",(float)oData.iAmpR/100.0);
   DEBUGLN("\tiVolt",(float)oData.iVolt/100.0);
-  //Serial.print("\tcrc="); Serial.println(oData.checksum,HEX);
+}
+
+void HoverDebug(SerialHover2Server& oData)
+{
+  DEBUGTX("0",oData.iVolt);
+  DEBUGTB("1",oData.iAmpL);
+  DEBUGTB("2",oData.iAmpR);
+  DEBUGTB("3",oData.iSpeedL);
+  DEBUGLN("4",oData.iSpeedR);
 }
 
 #ifdef DEBUG_RX

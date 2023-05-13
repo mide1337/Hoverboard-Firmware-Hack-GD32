@@ -40,7 +40,7 @@
 
 uint32_t msTicks;
 uint32_t timeoutCounter_ms = 0;
-FlagStatus timedOut = SET;
+FlagStatus timedOut = RESET;
 
 #ifdef SLAVE
 uint32_t hornCounter_ms = 0;
@@ -78,7 +78,7 @@ void TIMER13_IRQHandler(void)
 	{
 		
 		// First timeout reset all process values
-		if (timedOut == SET)	// robo: had been RESET = bug ?
+		if (timedOut == RESET)	// robo: had been RESET = bug ?
 		{
 #ifdef MASTER
 			steer = 0;
@@ -89,12 +89,12 @@ void TIMER13_IRQHandler(void)
 #endif
 		}
 		
-		timedOut = RESET;		// robo: had been SET = bug ?
-		DEBUG_LedSet(RESET)		
+		timedOut = SET;		// robo: had been SET = bug ?
+		
 	}
 	else
 	{
-		timedOut = SET;		// robo: had been RESET = bug ?
+		timedOut = RESET;		// robo: had been RESET = bug ?
 		timeoutCounter_ms++;
 	}
 
@@ -153,13 +153,11 @@ void DMA_Channel0_IRQHandler(void)
 	}
 }
 
-
-//----------------------------------------------------------------------------
 // This function handles DMA_Channel1_2_IRQHandler interrupt
 // Is asynchronously called when USART0 RX finished
-//----------------------------------------------------------------------------
 void DMA_Channel1_2_IRQHandler(void)
 {
+	//DEBUG_LedSet(SET) // (steerCounter%20) < 10		
 	// USART steer/bluetooth RX
 	if (dma_interrupt_flag_get(DMA_CH2, DMA_INT_FLAG_FTF))
 	{

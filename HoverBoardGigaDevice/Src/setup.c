@@ -475,8 +475,10 @@ void USART_Steer_COM_init(void)
 	usart_stop_bit_set(USART_STEER_COM, USART_STB_1BIT);
 	usart_oversample_config(USART_STEER_COM, USART_OVSMOD_16);
 	
+	
 	// Enable both transmitter and receiver
 	usart_transmit_config(USART_STEER_COM, USART_TRANSMIT_ENABLE);
+	//usart_invert_config(USART_STEER_COM, USART_SWAP_ENABLE);	// HarleyBob
 	usart_receive_config(USART_STEER_COM, USART_RECEIVE_ENABLE);
 	
 	// Enable USART
