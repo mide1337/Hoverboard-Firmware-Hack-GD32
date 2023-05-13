@@ -37,7 +37,7 @@ void loop()
   unsigned long iNow = millis();
   digitalWrite(LED_BUILTIN, (iNow%2000) < 500);
 
-  int iSpeed = 3 * (ABS( (int)((iNow/20+200) % 400) - 200) - 100);   // repeats from +300 to -300 to +300 :-)
+  int iSpeed = 3 * (ABS( (int)((iNow/20+100) % 400) - 200) - 100);   // repeats from +300 to -300 to +300 :-)
   int iSteer = 0;
   //iSpeed /= 10;
   
