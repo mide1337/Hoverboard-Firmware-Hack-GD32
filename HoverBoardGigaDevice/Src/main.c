@@ -30,7 +30,7 @@
 #endif
 
 	
-		
+
 uint32_t steerCounter = 0;								// Steer counter for setting update rate
 int32_t speed = 0; 												// global variable for speed.    -1000 to 1000
     
@@ -325,6 +325,7 @@ int main (void)
 			#ifdef SLAVE
 				SetEnable(SET);
 				SetPWM(-speed);
+				ResetTimeout();
 			#endif
 		#endif
 

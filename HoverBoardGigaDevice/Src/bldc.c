@@ -147,9 +147,10 @@ void SetPWM(int16_t setPwm)
 	bldc_inputFilterPwm = CLAMP(setPwm, -1000, 1000);
 }
 
-//----------------------------------------------------------------------------
+
+extern uint32_t steerCounter;								// Steer counter for setting update rate
+
 // Calculation-Routine for BLDC => calculates with 16kHz
-//----------------------------------------------------------------------------
 void CalculateBLDC(void)
 {
 	int y = 0;     // yellow = phase A
@@ -205,8 +206,10 @@ void CalculateBLDC(void)
 	else
 	{
 		timer_automatic_output_enable(TIMER_BLDC);
-		DEBUG_LedSet(hall_a == 0)
+		DEBUG_LedSet(hall_c == 0)
   }
+
+	//if (timedOut == SET)	DEBUG_LedSet((steerCounter%2) < 1)		
 	
   // Read hall sensors
 	hall_a = gpio_input_bit_get(HALL_A_PORT, HALL_A_PIN);

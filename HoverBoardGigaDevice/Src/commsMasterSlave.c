@@ -231,7 +231,9 @@ void ProessReceived(SerialReceive* pData)
 	CheckGeneralValue(identifier, value);
 	
 	// Send answer
-	SendMaster(upperLEDMaster, lowerLEDMaster, mosfetOutMaster, beepsBackwardsMaster);
+	
+	//SendMaster(upperLEDMaster, lowerLEDMaster, mosfetOutMaster, beepsBackwardsMaster);
+	SendMaster(GetUpperLEDMaster(), GetLowerLEDMaster(), mosfetOutMaster, beepsBackwardsMaster);
 	
 	// Reset the pwm timout to avoid stopping motors
 	ResetTimeout();

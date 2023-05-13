@@ -75,12 +75,12 @@
 #define HALL_C_PORT GPIOB				// robo, based on Herleybob:defines.h C = W ?
 
 // Usart master slave defines
-//#define USART_MASTERSLAVE USART1	// robo no second uart port yet.
+#define USART_MASTERSLAVE USART1	// robo no second uart port yet.
 #ifdef USART_MASTERSLAVE
-	#define USART_MASTERSLAVE_TX_PIN GPIO_PIN_2		// TODO
-	#define USART_MASTERSLAVE_TX_PORT GPIOA				// TODO
-	#define USART_MASTERSLAVE_RX_PIN GPIO_PIN_3		// TODO
-	#define USART_MASTERSLAVE_RX_PORT GPIOA				// TODO
+	#define USART_MASTERSLAVE_TX_PIN GPIO_PIN_2		// lerwinDE :-)
+	#define USART_MASTERSLAVE_TX_PORT GPIOA				// lerwinDE :-)
+	#define USART_MASTERSLAVE_RX_PIN GPIO_PIN_15	// lerwinDE :-)
+	#define USART_MASTERSLAVE_RX_PORT GPIOA				// lerwinDE :-)
 #endif
 
 // ADC defines
