@@ -41,6 +41,7 @@ void loop()
   int iSteer = 0;
   //iSpeed /= 10;
   
+  
   if (Receive(oSerialHover,oHoverFeedback))   // Reply only when you receive data
   {
     DEBUGT("millis",iNow-iLast);
