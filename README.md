@@ -70,6 +70,8 @@ Connect GND, SWDIO and SWCLK to your SWD programmer, like the ST-Link found on m
 
 - If you never flashed your mainboard before, the controller is locked. To unlock the flash, use STM32 ST-LINK Utility or openOCD. [instructions here](https://github.com/EFeru/hoverboard-firmware-hack-FOC/wiki/How-to-Unlock-MCU-flash).
 ST-Link-Utility is out of date and needs a few old mfc42.dll files! Please open an issue when you know how to unlock flash with the STM32CubeProgrammer.
+If even ST-Link-Utility can not access the board, the NREST (no reset = pull to gnd to reset) pin needs to be pulled down by the RST pin of the St-link-V2 dongle (which might need a npn transistor to invert the RST signal to a NREST signal).
+**If you don't want to fiddle with some tiny tiny smd resitor** to access the NREST pin, simply turned on the power quickly after hitting strg+B, and after about 20 tries the mcu will just power up when the stlink utility is trying to access. Then you can disable read protection. Then you can flash with Keil (or the ST-Link-Utility?).
 - To flash the STM32, use the STM32 ST-LINK Utility (2023: STM32CubeProgrammer) as well, ST-Flash utility or Keil by itself. I was also having 100% success rate with platform.io project from [here](https://github.com/EFeru/hoverboard-sideboard-hack-GD) just for uploading. You have to rename the output file *.axf to **firmware.elf** and move/copy it to the platform.io project, then upload. 
 Bonus: Kristian Kosev (krisstakos) has  included **rename.bat** which will rename and move your output file, but you have to specify the right paths.
 - Hold the powerbutton while flashing the firmware, as the controller releases the power latch and switches itself off during flashing
