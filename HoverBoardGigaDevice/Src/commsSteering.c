@@ -25,6 +25,7 @@ static int16_t iReceivePos = 0;
 extern int32_t steer;
 extern int32_t speed;
 
+extern int32_t iOdom;
 extern float batteryVoltage; 							// global variable for battery voltage
 extern float currentDC; 									// global variable for current dc
 extern float realSpeed; 									// global variable for real Speed
@@ -48,6 +49,8 @@ typedef struct{				// ´#pragma pack(1)´ needed to get correct sizeof()
    uint16_t iVolt;		// 100* V
    int16_t iAmpL;			// 100* A
    int16_t iAmpR;			// 100* A
+   int32_t iOdomL;		// hall steps
+   int32_t iOdomR;		// hall steps
    uint16_t checksum;
 } SerialHover2Server;
 
@@ -67,6 +70,8 @@ void SendSteerDevice(void)
 	oData.iAmpR = (int16_t) 	(oDataSlave.currentDC * 100);
 	oData.iSpeedL = (int16_t) (realSpeed * 100);
 	oData.iSpeedR = (int16_t) (oDataSlave.realSpeed * 100);
+	oData.iOdomL = (int32_t) iOdom;
+	oData.iOdomR = (int32_t) oDataSlave.iOdom;
 /*	
 	oData.iVolt = aDebug[0];
 	oData.iAmpL = aDebug[1];

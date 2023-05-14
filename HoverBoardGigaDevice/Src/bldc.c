@@ -1,32 +1,3 @@
-/*
-* This file is part of the hoverboard-firmware-hack-V2 project. The 
-* firmware is used to hack the generation 2 board of the hoverboard.
-* These new hoverboards have no mainboard anymore. They consist of 
-* two Sensorboards which have their own BLDC-Bridge per Motor and an
-* ARM Cortex-M3 processor GD32F130C8.
-*
-* Copyright (C) 2018 Florian Staeblein
-* Copyright (C) 2018 Jakob Broemauer
-* Copyright (C) 2018 Kai Liebich
-* Copyright (C) 2018 Christoph Lehnert
-*
-* The program is based on the hoverboard project by Niklas Fauth. The 
-* structure was tried to be as similar as possible, so that everyone 
-* could find a better way through the code.
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
 
 #include "gd32f1x0.h"
 #include "../Inc/setup.h"
@@ -71,9 +42,20 @@ uint8_t buzzerFreq = 0;
 uint8_t buzzerPattern = 0;
 #endif
 
-//----------------------------------------------------------------------------
+// robo23 odometer support
+// from https://github.com/alex-makarov/hoverboard-firmware-hack-FOC/blob/master/Src/bldc.c
+int32_t iOdom = 0;
+int16_t modulo(int16_t m, int16_t rest_classes)
+{
+  return (((m % rest_classes) + rest_classes) %rest_classes);
+}
+int16_t up_or_down(int16_t vorher, int16_t nachher)
+{
+  uint16_t up_down[6] = {0,-1,-2,0,2,1};
+  return up_down[modulo(vorher-nachher, 6)];
+}
+
 // Commutation table
-//----------------------------------------------------------------------------
 const uint8_t hall_to_pos[8] =
 {
 	// annotation: for example SA=0 means hall sensor pulls SA down to Ground
@@ -242,6 +224,10 @@ void CalculateBLDC(void)
 	timer_channel_output_pulse_value_config(TIMER_BLDC, TIMER_BLDC_CHANNEL_B, CLAMP(b + pwm_res / 2, 10, pwm_res-10));
 	timer_channel_output_pulse_value_config(TIMER_BLDC, TIMER_BLDC_CHANNEL_Y, CLAMP(y + pwm_res / 2, 10, pwm_res-10));
 	
+	
+	// robo23
+	iOdom = iOdom - up_or_down(lastPos, pos); // int32 will overflow at +-2.147.483.648
+	
 	// Increments with 62.5us
 	if(speedCounter < 4000) speedCounter++;	// No speed after 250ms
 	
@@ -249,6 +235,7 @@ void CalculateBLDC(void)
 	if (lastPos != 1 && pos == 1)
 	{
 		realSpeed = 1991.81f / (float)speedCounter; //[km/h]
+		if (lastPos == 2)	realSpeed *= -1;
 		speedCounter = 0;
 	}
 	else if (speedCounter >= 4000)	realSpeed = 0;

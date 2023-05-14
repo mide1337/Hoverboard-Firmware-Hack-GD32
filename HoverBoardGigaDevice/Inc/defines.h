@@ -43,6 +43,7 @@ typedef struct
   uint8_t wState;
 	float currentDC; 									// global variable for current dc
 	float realSpeed; 									// global variable for real Speed
+	int32_t iOdom;	
 } DataSlave;
 
 

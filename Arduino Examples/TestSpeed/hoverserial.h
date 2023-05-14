@@ -13,13 +13,15 @@ uint8_t activateWeakening = 0;
 
 #define START_FRAME         0xABCD       // [-] Start frme definition for reliable serial communication
 
-typedef struct{
+typedef struct __attribute__((packed, aligned(1))) {
    uint16_t cStart = START_FRAME;    //  = '/';
    int16_t iSpeedL;   // 100* km/h
    int16_t iSpeedR;   // 100* km/h
    uint16_t iVolt;    // 100* V
    int16_t iAmpL;   // 100* A
    int16_t iAmpR;   // 100* A
+   int32_t iOdomL;    // hall steps
+   int32_t iOdomR;    // hall steps
    uint16_t checksum;
 } SerialHover2Server;
 
@@ -102,7 +104,9 @@ template <typename O,typename I> void HoverSendLR(O& oSerial, I iSpeedLeft, I iS
 
 void HoverLog(SerialHover2Server& oData)
 {
-  DEBUGT("iSpeedL",(float)oData.iSpeedL/100.0);
+  DEBUGT("iOdomL",oData.iOdomL);
+  DEBUGT("\tiOdomR",oData.iOdomR);
+  DEBUGT("\tiSpeedL",(float)oData.iSpeedL/100.0);
   DEBUGT(" iSpeedR",(float)oData.iSpeedR/100.0);
   DEBUGT("\tiAmpL",(float)oData.iAmpL/100.0);
   DEBUGT(" iAmpR",(float)oData.iAmpR/100.0);

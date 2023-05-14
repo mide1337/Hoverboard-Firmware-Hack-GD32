@@ -57,6 +57,7 @@ FlagStatus GetBeepsBackwardsMaster(void)
 		uint8_t	wState;
 		float currentDC; 									// global variable for current dc
 		float realSpeed; 									// global variable for real Speed
+		int32_t iOdom;	
 		uint16_t checksum;
 	} SerialSlave2Master;
 
@@ -86,8 +87,7 @@ FlagStatus GetBeepsBackwardsMaster(void)
 
 	extern float currentDC; 									// global variable for current dc
 	extern float realSpeed; 									// global variable for real Speed
-
-
+	extern int32_t iOdom;
 
 	void CheckGeneralValue(uint8_t identifier, int16_t value);
 #endif
@@ -167,9 +167,10 @@ void ProessReceived(SerialReceive* pData)
 	lowerLED 	= (pData->wState & BIT(1)) ? SET : RESET;
 	upperLED 	= (pData->wState & BIT(0)) ? SET : RESET;
 
-	oDataSlave.wState = pData->wState = 17;
+	oDataSlave.wState 	= pData->wState = 17;
 	oDataSlave.currentDC = pData->currentDC;
 	oDataSlave.realSpeed = pData->realSpeed;
+	oDataSlave.iOdom 		= pData->iOdom;
 
 	// Set functions according to the variables
 	gpio_bit_write(MOSFET_OUT_PORT, MOSFET_OUT_PIN, mosfetOut);
@@ -287,7 +288,7 @@ void SendMaster(FlagStatus upperLEDMaster, FlagStatus lowerLEDMaster, FlagStatus
 	oData.wState 			= sendByte;
 	oData.currentDC = currentDC;
 	oData.realSpeed = realSpeed;
-	
+	oData.iOdom = iOdom;
 	
 	oData.checksum = 	CalcCRC((uint8_t*) &oData, sizeof(oData) - 2);	// (first bytes except crc)
 	SendBuffer(USART_MASTERSLAVE, (uint8_t*) &oData, sizeof(oData));

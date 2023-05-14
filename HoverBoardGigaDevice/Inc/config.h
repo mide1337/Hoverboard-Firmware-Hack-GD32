@@ -16,7 +16,7 @@
 //#define LAYOUT_2_4	// NOT READY !!! https://github.com/RoboDurden/Hoverboard-Firmware-Hack-Gen2.x/issues/3
 
 
-#define MASTER		// uncomment if firmware is for slave board
+//#define MASTER		// uncomment if firmware is for slave board
 
 //#define TEST_SPEED	// will discard uart input and repeat speed from -300 to 300 instead
 

@@ -321,6 +321,7 @@ int main (void)
 		#ifdef TEST_SPEED
 			speed = 3 * (ABS((	((int32_t)steerCounter+100) % 400) - 200) - 100);
 			//speed = 300;
+			//speed = 0;
 
 			#ifdef SLAVE
 				SetEnable(SET);
